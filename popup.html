@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CopyPaste Freedom</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Top Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="4" width="14" height="17" rx="3" stroke="#F5F7F5" stroke-width="1.8" fill="#141818"/>
+            <path d="M9 3H15C15 2.44772 14.5523 2 14 2H10C9.44772 2 9 2.44772 9 3Z" fill="#111414" stroke="#B7FF00" stroke-width="1.8"/>
+            <path d="M8 12.5L10.5 15L16 9.5" stroke="#B7FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="title-row">
+            <h1 class="brand-title">CopyPaste Freedom</h1>
+            <span class="version-tag">v1.1</span>
+          </div>
+          <p class="brand-subtitle">Your browser. Your rules.</p>
+        </div>
+      </div>
+      <div id="statusBadge" class="status-badge active">
+        <span class="status-dot"></span>
+        <span id="statusText" class="status-label">ACTIVE</span>
+      </div>
+    </header>
+
+    <!-- Hostname Banner -->
+    <div class="host-banner">
+      <div class="host-info">
+        <svg class="host-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13zM4.75 8a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z"/>
+        </svg>
+        <span id="currentHost" class="host-name" title="Current Website">Scanning...</span>
+      </div>
+      <span id="hostStatusPill" class="host-pill">Unrestricted</span>
+    </div>
+
+    <!-- Compact Smart Scan Summary Banner -->
+    <div id="scanSummaryBanner" class="scan-summary-banner status-checking">
+      <div class="summary-left">
+        <span id="summaryIcon" class="summary-icon">⚡</span>
+        <span id="summaryText" class="summary-text">Analyzing page restrictions...</span>
+      </div>
+      <span id="summaryPill" class="summary-pill">Scanning</span>
+    </div>
+
+    <!-- Main Freedom Mode Card -->
+    <section class="card master-card">
+      <div class="master-header">
+        <div class="master-title-group">
+          <div class="master-title-row">
+            <h2 class="master-title">FREEDOM MODE</h2>
+            <span id="masterStateLabel" class="master-state-active">ACTIVE</span>
+          </div>
+          <p id="masterDesc" class="master-desc">Restoring text selection and clipboard events</p>
+        </div>
+        <label class="switch master-switch">
+          <input type="checkbox" id="masterToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Individual Feature Controls -->
+    <section class="card">
+      <div class="card-header">
+        <h3 class="card-title">INDIVIDUAL CONTROLS</h3>
+        <span class="card-meta" id="featuresCount">5 / 5 Enabled</span>
+      </div>
+
+      <div class="toggle-list">
+        <!-- Feature 1: Text Selection -->
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-label">Enable Text Selection</span>
+            <span class="toggle-desc">CSS overrides & selectstart unblocking</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleSelection" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Feature 2: Copy -->
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-label">Enable Copy (Ctrl + C)</span>
+            <span class="toggle-desc">Intercept copy event & prevent site blocks</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleCopy" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Feature 3: Paste -->
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-label">Enable Paste (Ctrl + V)</span>
+            <span class="toggle-desc">Restore native paste into input fields</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="togglePaste" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Feature 4: Cut -->
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-label">Enable Cut (Ctrl + X)</span>
+            <span class="toggle-desc">Allow cutting in editable fields</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleCut" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Feature 5: Right-Click -->
+        <div class="toggle-item">
+          <div class="toggle-info">
+            <span class="toggle-label">Enable Right-Click Menu</span>
+            <span class="toggle-desc">Unblock native context menu</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggleRightClick" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Smart Scan Report Card -->
+    <section class="card scan-card">
+      <div class="card-header">
+        <div class="scan-title-wrap">
+          <h3 class="card-title">SMART SCAN REPORT</h3>
+          <span id="scanIndicator" class="scan-live-dot"></span>
+        </div>
+        <div class="scan-actions-wrap">
+          <button id="btnRescan" class="btn-rescan" title="Run fresh diagnostic scan">
+            <svg class="spin-icon" viewBox="0 0 16 16" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 3a5 5 0 104.546 2.914.5.5 0 01.908-.417A6 6 0 118 2v1z"/>
+              <path d="M8 4.466V.534a.25.25 0 01.41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 018 4.466z"/>
+            </svg>
+            <span>Rescan</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Diagnostic Badges Grid -->
+      <div class="scan-grid">
+        <div class="scan-item">
+          <div class="scan-item-header">
+            <span class="scan-name">Text Selection</span>
+            <span id="diagSelection" class="scan-status badge-neutral">Scanning...</span>
+          </div>
+          <span id="diagSelectionDetail" class="scan-sub-detail">CSS user-select: none</span>
+        </div>
+
+        <div class="scan-item">
+          <div class="scan-item-header">
+            <span class="scan-name">Copy Event</span>
+            <span id="diagCopy" class="scan-status badge-neutral">Scanning...</span>
+          </div>
+          <span id="diagCopyDetail" class="scan-sub-detail">Ctrl+C & oncopy guard</span>
+        </div>
+
+        <div class="scan-item">
+          <div class="scan-item-header">
+            <span class="scan-name">Paste Event</span>
+            <span id="diagPaste" class="scan-status badge-neutral">Scanning...</span>
+          </div>
+          <span id="diagPasteDetail" class="scan-sub-detail">Ctrl+V & inputs</span>
+        </div>
+
+        <div class="scan-item">
+          <div class="scan-item-header">
+            <span class="scan-name">Context Menu</span>
+            <span id="diagRightClick" class="scan-status badge-neutral">Scanning...</span>
+          </div>
+          <span id="diagRightClickDetail" class="scan-sub-detail">Right-click & contextmenu</span>
+        </div>
+      </div>
+
+      <!-- Expandable Detailed Scan Report Panel -->
+      <div class="details-section">
+        <button id="btnToggleDetails" class="btn-toggle-details">
+          <span>Detailed Diagnostics Breakdown</span>
+          <span id="detailsArrow" class="details-arrow">▾</span>
+        </button>
+        <div id="scanDetailsPanel" class="scan-details-panel hidden">
+          <div class="detail-row">
+            <span class="detail-label">Text Selection:</span>
+            <span id="reportSelectDetail" class="detail-value">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Copy Guard:</span>
+            <span id="reportCopyDetail" class="detail-value">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Paste Guard:</span>
+            <span id="reportPasteDetail" class="detail-value">—</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Right-Click:</span>
+            <span id="reportRightClickDetail" class="detail-value">—</span>
+          </div>
+          <div class="detail-meta">
+            <span id="reportTimestamp">Last scanned: Just now</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Site Actions Bar -->
+    <div class="site-actions">
+      <button id="btnEnableSite" class="btn btn-primary" title="Force enable on this website">
+        Enable on This Website
+      </button>
+      <button id="btnDisableSite" class="btn btn-secondary" title="Disable freedom on this website">
+        Disable on This Website
+      </button>
+      <button id="btnResetSite" class="btn btn-ghost" title="Reset this domain to default settings">
+        Reset Settings
+      </button>
+    </div>
+
+    <!-- Quick Footer Links -->
+    <footer class="footer">
+      <a href="#" id="linkOptions" class="footer-link">
+        <svg class="footer-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 4.75a3.25 3.25 0 100 6.5 3.25 3.25 0 000-6.5zM9.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+          <path fill-rule="evenodd" d="M6.92 1.25a1.5 1.5 0 012.16 0l.43.43a1.5 1.5 0 001.62.33l.58-.23a1.5 1.5 0 011.87.8l.27.56a1.5 1.5 0 001.32.93l.61.08a1.5 1.5 0 011.3 1.53v.62a1.5 1.5 0 00.7 1.34l.52.33a1.5 1.5 0 010 2.56l-.52.33a1.5 1.5 0 00-.7 1.34v.62a1.5 1.5 0 01-1.3 1.53l-.61.08a1.5 1.5 0 00-1.32.93l-.27.56a1.5 1.5 0 01-1.87.8l-.58-.23a1.5 1.5 0 00-1.62.33l-.43.43a1.5 1.5 0 01-2.16 0l-.43-.43a1.5 1.5 0 00-1.62-.33l-.58.23a1.5 1.5 0 01-1.87-.8l-.27-.56a1.5 1.5 0 00-1.32-.93l-.61-.08a1.5 1.5 0 01-1.3-1.53v-.62a1.5 1.5 0 00-.7-1.34l-.52-.33a1.5 1.5 0 010-2.56l.52-.33a1.5 1.5 0 00.7-1.34v-.62a1.5 1.5 0 011.3-1.53l.61-.08a1.5 1.5 0 001.32-.93l.27-.56a1.5 1.5 0 011.87-.8l.58.23a1.5 1.5 0 001.62-.33l.43-.43z"/>
+        </svg>
+        <span>Settings</span>
+      </a>
+      <span class="footer-divider">•</span>
+      <a href="#" id="linkScanHistory" class="footer-link">
+        <svg class="footer-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8.515 1.019A7 7 0 008 1a7 7 0 106.945 6.136.75.75 0 00-1.49-.15A5.5 5.5 0 118 2.5c.346 0 .685.032 1.014.093l-.68.68A.75.75 0 008.866 4.34l1.97-1.97a.75.75 0 000-1.06l-1.97-1.97a.75.75 0 00-1.06 1.06l.709.709z"/>
+          <path d="M8 4.75a.75.75 0 00-.75.75v3.25c0 .414.336.75.75.75h2.5a.75.75 0 000-1.5h-1.75V5.5A.75.75 0 008 4.75z"/>
+        </svg>
+        <span>Scan History</span>
+      </a>
+      <span class="footer-divider">•</span>
+      <a href="#" id="linkTestLab" class="footer-link">
+        <svg class="footer-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M5.52.359A.5.5 0 016 0h4a.5.5 0 01.48.641L9.206 5H12a.5.5 0 01.39.812l-7 9a.5.5 0 01-.87-.453L5.794 9H3a.5.5 0 01-.39-.812l3-7.5a.5.5 0 01.03-.047L5.52.359z"/>
+        </svg>
+        <span>Test Lab</span>
+      </a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

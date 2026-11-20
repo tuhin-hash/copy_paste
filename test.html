@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CopyPaste Freedom — Test Lab</title>
+  <style>
+    :root {
+      --bg-primary: #080A0A;
+      --bg-secondary: #111414;
+      --bg-card: #151919;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --accent-neon: #B7FF00;
+      --accent-glow: #8DFF3F;
+      --text-primary: #F5F7F5;
+      --text-secondary: #9DA5A0;
+      --text-muted: #646E68;
+      --danger: #FF4D4D;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 32px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: #141A18;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(183, 255, 0, 0.1);
+      border: 1px solid rgba(183, 255, 0, 0.3);
+      color: var(--accent-neon);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Lab Instructions */
+    .instructions-card {
+      background: linear-gradient(180deg, #18221D 0%, #111515 100%);
+      border: 1px solid rgba(183, 255, 0, 0.25);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .instructions-card h3 {
+      font-size: 14px;
+      color: var(--accent-neon);
+      margin-bottom: 6px;
+    }
+
+    .instructions-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Test Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tag-blocked {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 77, 77, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(255, 77, 77, 0.3);
+    }
+
+    .tag-normal {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+    }
+
+    /* Test Content Boxes */
+    .test-box {
+      background: #0E1212;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 13px;
+    }
+
+    /* Blocked styles (intentional for test bench) */
+    .user-select-none-test {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      cursor: not-allowed;
+    }
+
+    .input-field {
+      width: 100%;
+      background: #0A0D0D;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-neon);
+    }
+
+    textarea.input-field {
+      height: 72px;
+      resize: vertical;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+      background: #1C2322;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #252E2D;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-neon {
+      background: var(--accent-neon);
+      color: #080A0A;
+      font-weight: 700;
+      border: none;
+    }
+
+    .btn-neon:hover {
+      box-shadow: 0 0 12px rgba(183, 255, 0, 0.35);
+    }
+
+    /* Live Event Log */
+    .terminal-card {
+      grid-column: span 2;
+    }
+
+    .terminal-box {
+      background: #060808;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px;
+      height: 140px;
+      overflow-y: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 12px;
+      color: #A0B0A8;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .log-entry {
+      display: flex;
+      gap: 10px;
+    }
+
+    .log-time { color: var(--text-muted); }
+    .log-event { font-weight: 700; }
+    .log-event.blocked { color: var(--danger); }
+    .log-event.allowed { color: var(--accent-neon); }
+
+    /* Toast Notification for Context Menu */
+    .toast-notice {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1F1515;
+      border: 1px solid var(--danger);
+      color: #FFA3A3;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .toast-notice.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="title-group">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="4" width="14" height="17" rx="3" stroke="#F5F7F5" stroke-width="1.8" fill="#141818"/>
+            <path d="M9 3H15C15 2.44772 14.5523 2 14 2H10C9.44772 2 9 2.44772 9 3Z" fill="#111414" stroke="#B7FF00" stroke-width="1.8"/>
+            <path d="M8 12.5L10.5 15L16 9.5" stroke="#B7FF00" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>CopyPaste Freedom Test Lab</h1>
+          <p class="subtitle">Interactive sandbox simulating real-world website restrictions.</p>
+        </div>
+      </div>
+      <div class="status-badge">SANDBOX ENVIRONMENT</div>
+    </header>
+
+    <!-- Lab Instructions -->
+    <div class="instructions-card">
+      <h3>⚡ How to Test the Extension</h3>
+      <p>This page intentionally deploys active CSS and JavaScript restrictions that block selecting text, copying, pasting, cutting, and opening the right-click menu. Open the CopyPaste Freedom extension popup from your Chrome toolbar and toggle <strong>FREEDOM MODE</strong> to witness immediate restoration.</p>
+    </div>
+
+    <!-- Test Grid -->
+    <div class="grid">
+      <!-- Zone 1: Text Selection Blocker -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">1. Text Selection Blocker</h3>
+          <span class="tag-blocked">CSS & JS RESTRICTED</span>
+        </div>
+        <div id="selectionBlockedTestBox" class="test-box user-select-none-test" onselectstart="return handleSelectStart(event)">
+          <strong>🔒 Protected Article:</strong> This text container has <code>user-select: none</code> and an active <code>onselectstart</code> cancellation handler. Try dragging your mouse over this text to highlight it.
+        </div>
+        <p class="subtitle">Without Freedom Mode: Text cannot be selected.<br>With Freedom Mode: Text highlights cleanly with neon green accent.</p>
+      </div>
+
+      <!-- Zone 2: Copy Blocker -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">2. Copy Blocker (Ctrl + C)</h3>
+          <span class="tag-blocked">EVENT INTERCEPTED</span>
+        </div>
+        <div id="copyBlockedTestBox" class="test-box">
+          <strong>🔒 Confidential Text:</strong> <span id="copyTargetText">SecretToken-9942-FREEDOM-TEST</span>. Select this token and press <kbd>Ctrl+C</kbd> or use right-click copy.
+        </div>
+        <p class="subtitle">Without Freedom Mode: Copy event is canceled by site script.<br>With Freedom Mode: Text copies successfully to your clipboard.</p>
+      </div>
+
+      <!-- Zone 3: Paste Blocker -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">3. Paste Blocker (Ctrl + V)</h3>
+          <span class="tag-blocked">INPUT RESTRICTED</span>
+        </div>
+        <input type="text" id="pasteBlockedInput" class="input-field" placeholder="Try pasting here (Ctrl + V or Right-Click Paste)">
+        <textarea id="pasteBlockedTextarea" class="input-field" placeholder="Try pasting into this textarea..."></textarea>
+        <p class="subtitle">Without Freedom Mode: Paste attempts are rejected.<br>With Freedom Mode: Text pastes normally into the field.</p>
+      </div>
+
+      <!-- Zone 4: Cut Blocker -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">4. Cut Blocker (Ctrl + X)</h3>
+          <span class="tag-blocked">CUT DISABLED</span>
+        </div>
+        <input type="text" id="cutBlockedInput" class="input-field" value="Select this text and press Ctrl+X to cut">
+        <p class="subtitle">Without Freedom Mode: Cut event is blocked.<br>With Freedom Mode: Text is cut from input and placed on clipboard.</p>
+      </div>
+
+      <!-- Zone 5: Right-Click Context Menu -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">5. Right-Click Suppressor</h3>
+          <span class="tag-blocked">CONTEXTMENU PREVENTED</span>
+        </div>
+        <div id="contextBlockedBox" class="test-box" style="height: 80px; display: flex; align-items: center; justify-content: center; cursor: context-menu;">
+          Right-click anywhere inside this box
+        </div>
+        <p class="subtitle">Without Freedom Mode: Shows site block warning.<br>With Freedom Mode: Native browser context menu opens freely.</p>
+      </div>
+
+      <!-- Zone 6: SPA & Dynamic DOM Injection -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">6. SPA Dynamic Content</h3>
+          <span class="tag-blocked">DYNAMIC MUTATION</span>
+        </div>
+        <button id="btnSpawnDynamic" class="btn btn-neon">+ Inject New Restricted Element</button>
+        <div id="dynamicContainer" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        <p class="subtitle">Tests MutationObserver unblocking on dynamically created nodes.</p>
+      </div>
+
+      <!-- Zone 7: Clipboard Verifier Sandbox -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">7. Clipboard Verifier Sandbox</h3>
+          <span class="tag-normal">VERIFICATION ZONE</span>
+        </div>
+        <input type="text" id="verifierInput" class="input-field" placeholder="Paste whatever you copied here to verify contents...">
+        <button id="btnReadClipboard" class="btn">Read from Clipboard API</button>
+        <p id="clipboardStatus" class="subtitle">Ready to verify copied text.</p>
+      </div>
+
+      <!-- Zone 8: Normal Controls (Safety Check) -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">8. Normal Controls Safety Check</h3>
+          <span class="tag-normal">NON-INTERFERENCE</span>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button class="btn" onclick="alert('Button click works cleanly!')">Interactive Button</button>
+          <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px;">
+            <input type="checkbox" checked> Normal Checkbox
+          </label>
+        </div>
+        <p class="subtitle">Verifies that Freedom Mode doesn't alter layout or standard buttons.</p>
+      </div>
+
+      <!-- Zone 9: Flutter Web Compatibility Diagnostic -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">9. Flutter Web Compatibility Diagnostic</h3>
+          <span class="tag-blocked">FLUTTER-VIEW SIMULATION</span>
+        </div>
+        <p class="subtitle" style="margin-bottom: 14px;">
+          Flutter Web uses two distinct rendering modes: <strong>DOM-based HTML Renderer</strong> (DOM text nodes under glass pane) vs <strong>CanvasKit/Skwasm</strong> (WorkScribe architecture: bitmap pixels rendered on HTML5 canvas with zero DOM text nodes).
+        </p>
+
+        <!-- 9A: DOM-based Flutter Web -->
+        <div style="margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h4 style="font-size: 13px; color: var(--accent-neon);">9A. Supported DOM-Based Flutter (&lt;flutter-view&gt; with DOM text)</h4>
+            <span class="tag-normal" style="font-size: 10px;">DOM TEXT NODES</span>
+          </div>
+          <flutter-view id="flutterDomView" style="display: block; position: relative; padding: 14px; background: #141A18; border: 1px solid var(--border-subtle); border-radius: 8px;">
+            <flt-glass-pane id="flutterDomGlassPane" style="position: absolute; inset: 0; pointer-events: auto; z-index: 1;"></flt-glass-pane>
+            <flt-scene-host style="position: relative; z-index: 2;">
+              <flt-scene>
+                <flt-paragraph id="flutterDomText" style="font-size: 13px; color: var(--text-primary); line-height: 1.6;">
+                  DOM Flutter Text: This content is rendered as genuine DOM elements (&lt;flt-paragraph&gt;). When Freedom Mode is ON, CopyPaste Freedom unblocks pointer events and selection overrides, making it fully selectable and copyable.
+                </flt-paragraph>
+              </flt-scene>
+            </flt-scene-host>
+          </flutter-view>
+          <p class="subtitle" style="margin-top: 6px;">Status: <strong>Supported</strong> — Unblocked and restored via DOM &amp; event overrides.</p>
+        </div>
+
+        <!-- 9B: Canvas-based Flutter Web (WorkScribe Architecture) -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h4 style="font-size: 13px; color: var(--danger);">9B. CanvasKit Architecture (&lt;flutter-view&gt; with Canvas — WorkScribe)</h4>
+            <span class="tag-blocked" style="font-size: 10px;">CANVAS PIXELS</span>
+          </div>
+          <flutter-view id="flutterCanvasView" style="display: block; padding: 14px; background: #181414; border: 1px solid rgba(255, 77, 77, 0.2); border-radius: 8px;">
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">HTML5 Canvas Surface (Text rendered as 2D raster bitmap — Zero DOM text nodes):</p>
+            <canvas id="flutterCanvasElement" width="550" height="42" style="background: #0E0F0F; border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 4px; display: block; max-width: 100%;"></canvas>
+            <flt-semantics-placeholder role="button" aria-label="Enable accessibility" style="display: none;"></flt-semantics-placeholder>
+            <flt-text-editing-host style="display: none;"></flt-text-editing-host>
+          </flutter-view>
+          <p class="subtitle" style="margin-top: 6px;">
+            <strong>Diagnostic Truth:</strong> Because CanvasKit paints pixels on a canvas without DOM text nodes, native browser text selection cannot select canvas pixels. The Smart Scan detects this architecture and accurately reports <span style="color: var(--danger); font-weight: 700;">UNSUPPORTED</span>, preventing deceptive "All Neutralized" claims.
+          </p>
+        </div>
+      </div>
+
+      <!-- Zone 10: Live Event Terminal Log -->
+      <div class="card terminal-card">
+        <div class="card-header">
+          <h3 class="card-title">Live DOM Event Inspector</h3>
+          <button id="btnClearLog" class="btn" style="padding: 4px 10px; font-size: 11px;">Clear Log</button>
+        </div>
+        <div id="eventTerminal" class="terminal-box">
+          <div class="log-entry">
+            <span class="log-time">[00:00:00]</span>
+            <span class="log-event allowed">SYSTEM:</span>
+            <span>Test Lab initialized. Restrictions active. Open extension popup to test.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notice for Contextmenu Block -->
+  <div id="toastNotice" class="toast-notice">🚫 Right-click is blocked by website script!</div>
+
+  <script>
+    const terminal = document.getElementById('eventTerminal');
+    const toastNotice = document.getElementById('toastNotice');
+
+    function logEvent(type, message, isBlocked) {
+      const now = new Date();
+      const timeStr = `[${now.toTimeString().split(' ')[0]}]`;
+      const div = document.createElement('div');
+      div.className = 'log-entry';
+      div.innerHTML = `
+        <span class="log-time">${timeStr}</span>
+        <span class="log-event ${isBlocked ? 'blocked' : 'allowed'}">[${type.toUpperCase()}]</span>
+        <span>${message}</span>
+      `;
+      terminal.appendChild(div);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function showBlockedToast(msg) {
+      toastNotice.textContent = msg;
+      toastNotice.classList.add('show');
+      setTimeout(() => toastNotice.classList.remove('show'), 2000);
+    }
+
+    // 1. Text Selection Restriction Handler
+    function handleSelectStart(e) {
+      logEvent('selectstart', 'Website intercepted text selection (selectstart cancelled)', true);
+      return false;
+    }
+
+    // 2. Copy Restriction Handler
+    const copyTarget = document.getElementById('copyBlockedTestBox');
+    copyTarget.addEventListener('copy', (e) => {
+      // If probe event, let probe measure restriction
+      if (e._cpf_probe) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      logEvent('copy', 'Website prevented copying (copy event cancelled)', true);
+      showBlockedToast('🚫 Website policy: Copying is prohibited!');
+    });
+
+    copyTarget.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+        logEvent('keydown', 'Website detected Ctrl+C and called preventDefault', true);
+        e.preventDefault();
+      }
+    });
+
+    // 3. Paste Restriction Handlers
+    const pasteInput = document.getElementById('pasteBlockedInput');
+    const pasteTextarea = document.getElementById('pasteBlockedTextarea');
+
+    [pasteInput, pasteTextarea].forEach(el => {
+      el.addEventListener('paste', (e) => {
+        if (e._cpf_probe) {
+          e.preventDefault();
+          return;
+        }
+        e.preventDefault();
+        logEvent('paste', 'Website prevented paste into input field', true);
+        showBlockedToast('🚫 Website policy: Pasting is prohibited!');
+      });
+
+      el.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+          logEvent('keydown', 'Website detected Ctrl+V in input and called preventDefault', true);
+          e.preventDefault();
+        }
+      });
+    });
+
+    // 4. Cut Restriction Handler
+    const cutInput = document.getElementById('cutBlockedInput');
+    cutInput.addEventListener('cut', (e) => {
+      if (e._cpf_probe) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      logEvent('cut', 'Website prevented cut event', true);
+      showBlockedToast('🚫 Website policy: Cutting is prohibited!');
+    });
+
+    cutInput.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'x') {
+        logEvent('keydown', 'Website detected Ctrl+X and called preventDefault', true);
+        e.preventDefault();
+      }
+    });
+
+    // 5. Contextmenu Restriction Handler
+    const contextBox = document.getElementById('contextBlockedBox');
+    contextBox.addEventListener('contextmenu', (e) => {
+      if (e._cpf_probe) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      logEvent('contextmenu', 'Website blocked native context menu', true);
+      showBlockedToast('🚫 Website policy: Right-click is disabled!');
+    });
+
+    // 6. Dynamic Element Spawner
+    let dynCount = 0;
+    const btnSpawnDynamic = document.getElementById('btnSpawnDynamic');
+    const dynContainer = document.getElementById('dynamicContainer');
+
+    btnSpawnDynamic.addEventListener('click', () => {
+      dynCount++;
+      const el = document.createElement('div');
+      el.className = 'test-box user-select-none-test';
+      el.style.borderLeft = '3px solid #B7FF00';
+      el.innerHTML = `<strong>Dynamic Node #${dynCount}:</strong> Restricted text dynamically added to DOM with user-select: none.`;
+      
+      el.addEventListener('copy', (e) => {
+        if (e._cpf_probe) { e.preventDefault(); return; }
+        e.preventDefault();
+        logEvent('copy', `Dynamic Node #${dynCount} copy blocked`, true);
+      });
+
+      dynContainer.appendChild(el);
+      logEvent('dom', `Spawned dynamic restricted node #${dynCount}`, false);
+    });
+
+    // 7. Clipboard Verifier
+    const btnReadClipboard = document.getElementById('btnReadClipboard');
+    const clipboardStatus = document.getElementById('clipboardStatus');
+    const verifierInput = document.getElementById('verifierInput');
+
+    btnReadClipboard.addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        verifierInput.value = text;
+        clipboardStatus.textContent = `Clipboard read: "${text.substring(0, 40)}${text.length > 40 ? '...' : ''}"`;
+        logEvent('clipboard', `Read ${text.length} chars from clipboard`, false);
+      } catch (err) {
+        clipboardStatus.textContent = 'Clipboard read permission prompt or denied: use Ctrl+V in the box above.';
+      }
+    });
+
+    // Success audit logger: monitors events that completed without defaultPrevented
+    document.addEventListener('copy', (e) => {
+      if (!e.defaultPrevented && !e._cpf_probe) {
+        const text = window.getSelection ? window.getSelection().toString() : '';
+        logEvent('copy', `Browser successfully executed COPY: "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`, false);
+      }
+    });
+
+    document.addEventListener('paste', (e) => {
+      if (!e.defaultPrevented && !e._cpf_probe) {
+        logEvent('paste', 'Browser successfully executed PASTE into active field', false);
+      }
+    });
+
+    document.addEventListener('cut', (e) => {
+      if (!e.defaultPrevented && !e._cpf_probe) {
+        logEvent('cut', 'Browser successfully executed CUT on active field', false);
+      }
+    });
+
+    document.addEventListener('contextmenu', (e) => {
+      if (!e.defaultPrevented && !e._cpf_probe) {
+        logEvent('contextmenu', 'Browser successfully displayed native context menu', false);
+      }
+    });
+
+    // Zone 9: Flutter Web Compatibility Diagnostic Handlers
+    // 9A: Paint text onto CanvasKit simulation canvas
+    const flutterCanvas = document.getElementById('flutterCanvasElement');
+    if (flutterCanvas && flutterCanvas.getContext) {
+      const ctx = flutterCanvas.getContext('2d');
+      ctx.fillStyle = '#9DA5A0';
+      ctx.font = '13px Inter, -apple-system, sans-serif';
+      ctx.fillText('CanvasKit Text: Rendered via 2D/WebGL pixels. No DOM text nodes exist under cursor.', 12, 26);
+    }
+
+    // 9B: Simulate Flutter glass-pane event interception for DOM text mode
+    const flutterGlass = document.getElementById('flutterDomGlassPane');
+    if (flutterGlass) {
+      flutterGlass.addEventListener('selectstart', (e) => {
+        if (!document.documentElement.classList.contains('cpf-freedom-enabled')) {
+          e.preventDefault();
+          logEvent('selectstart', 'Flutter glass-pane intercepted DOM selection (selectstart cancelled)', true);
+        }
+      });
+      flutterGlass.addEventListener('copy', (e) => {
+        if (!document.documentElement.classList.contains('cpf-freedom-enabled')) {
+          e.preventDefault();
+          logEvent('copy', 'Flutter glass-pane intercepted copy event', true);
+        }
+      });
+    }
+
+    // Clear log button
+    document.getElementById('btnClearLog').addEventListener('click', () => {
+      terminal.innerHTML = '';
+      logEvent('system', 'Terminal log cleared', false);
+    });
+  </script>
+</body>
+</html>

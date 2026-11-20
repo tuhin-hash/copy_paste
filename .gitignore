@@ -1,0 +1,28 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor & IDE Directories
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary & Log Files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node & Package Manager (if added in future)
+node_modules/
+
+# Local Test Artifacts & Temporary Profiles
+scratch/
+temp/
+tmp/
+*.tmp

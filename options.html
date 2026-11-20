@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CopyPaste Freedom — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-box">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="4" width="14" height="17" rx="3" stroke="#F5F7F5" stroke-width="1.8" fill="#141818"/>
+            <path d="M9 3H15C15 2.44772 14.5523 2 14 2H10C9.44772 2 9 2.44772 9 3Z" fill="#111414" stroke="#B7FF00" stroke-width="1.8"/>
+            <path d="M8 12.5L10.5 15L16 9.5" stroke="#B7FF00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">CopyPaste Freedom</h1>
+          <p class="brand-tag">Settings & Preferences v1.1</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn active" data-tab="tab-defaults">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 4.75a3.25 3.25 0 100 6.5 3.25 3.25 0 000-6.5zM9.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+            <path fill-rule="evenodd" d="M6.92 1.25a1.5 1.5 0 012.16 0l.43.43a1.5 1.5 0 001.62.33l.58-.23a1.5 1.5 0 011.87.8l.27.56a1.5 1.5 0 001.32.93l.61.08a1.5 1.5 0 011.3 1.53v.62a1.5 1.5 0 00.7 1.34l.52.33a1.5 1.5 0 010 2.56l-.52.33a1.5 1.5 0 00-.7 1.34v.62a1.5 1.5 0 01-1.3 1.53l-.61.08a1.5 1.5 0 00-1.32.93l-.27.56a1.5 1.5 0 01-1.87.8l-.58-.23a1.5 1.5 0 00-1.62.33l-.43.43a1.5 1.5 0 01-2.16 0l-.43-.43a1.5 1.5 0 00-1.62-.33l-.58.23a1.5 1.5 0 01-1.87-.8l-.27-.56a1.5 1.5 0 00-1.32-.93l-.61-.08a1.5 1.5 0 01-1.3-1.53v-.62a1.5 1.5 0 00-.7-1.34l-.52-.33a1.5 1.5 0 010-2.56l.52-.33a1.5 1.5 0 00.7-1.34v-.62a1.5 1.5 0 011.3-1.53l.61-.08a1.5 1.5 0 001.32-.93l.27-.56a1.5 1.5 0 011.87-.8l.58.23a1.5 1.5 0 001.62-.33l.43-.43z"/>
+          </svg>
+          <span>Global Defaults</span>
+        </button>
+
+        <button class="nav-btn" data-tab="tab-sites">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13zM4.75 8a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z"/>
+          </svg>
+          <span>Website Rules</span>
+        </button>
+
+        <button class="nav-btn" data-tab="tab-history">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8.515 1.019A7 7 0 008 1a7 7 0 106.945 6.136.75.75 0 00-1.49-.15A5.5 5.5 0 118 2.5c.346 0 .685.032 1.014.093l-.68.68A.75.75 0 008.866 4.34l1.97-1.97a.75.75 0 000-1.06l-1.97-1.97a.75.75 0 00-1.06 1.06l.709.709z"/>
+            <path d="M8 4.75a.75.75 0 00-.75.75v3.25c0 .414.336.75.75.75h2.5a.75.75 0 000-1.5h-1.75V5.5A.75.75 0 008 4.75z"/>
+          </svg>
+          <span>Scan History</span>
+        </button>
+
+        <button class="nav-btn" data-tab="tab-docs">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.492-3.287.811V2.828zm7.5 9.605c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893V2.828c-.917-.32-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492v9.923z"/>
+          </svg>
+          <span>Capabilities & Docs</span>
+        </button>
+
+        <button class="nav-btn" data-tab="tab-about">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z"/>
+            <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 11-2 0 1 1 0 012 0z"/>
+          </svg>
+          <span>About & Safety</span>
+        </button>
+
+        <a href="test.html" target="_blank" class="nav-btn nav-link-external">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M5.52.359A.5.5 0 016 0h4a.5.5 0 01.48.641L9.206 5H12a.5.5 0 01.39.812l-7 9a.5.5 0 01-.87-.453L5.794 9H3a.5.5 0 01-.39-.812l3-7.5a.5.5 0 01.03-.047L5.52.359z"/>
+          </svg>
+          <span>Open Test Lab ↗</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="version-label">CopyPaste Freedom v1.1.0</span>
+        <span class="manifest-label">Manifest V3 Secure</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="main-content">
+      <!-- Toast Alert -->
+      <div id="toast" class="toast hidden">Settings saved successfully</div>
+
+      <!-- Tab 1: Global Defaults -->
+      <section id="tab-defaults" class="tab-pane active">
+        <div class="pane-header">
+          <h2 class="pane-title">Global Defaults</h2>
+          <p class="pane-subtitle">Define the baseline behavior applied to any newly visited website.</p>
+        </div>
+
+        <div class="card">
+          <div class="setting-row highlight">
+            <div class="setting-info">
+              <span class="setting-title">Default Freedom Mode State</span>
+              <span class="setting-desc">When visiting a website without specific rules, enable Freedom Mode automatically.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="defaultFreedomMode" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-section-title">Default Feature Preferences</h3>
+          <p class="card-section-desc">These feature defaults apply when Freedom Mode is enabled.</p>
+
+          <div class="setting-list">
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Enable Text Selection by Default</span>
+                <span class="setting-desc">Neutralizes CSS user-select: none and selectstart blockers</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="defaultTextSelection" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Enable Copy (Ctrl + C) by Default</span>
+                <span class="setting-desc">Stops copy event cancellation and unblocks keyboard copy</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="defaultCopy" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Enable Paste (Ctrl + V) by Default</span>
+                <span class="setting-desc">Allows pasting into text boxes, textareas, and inputs</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="defaultPaste" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Enable Cut (Ctrl + X) by Default</span>
+                <span class="setting-desc">Restores cutting selected text inside editable fields</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="defaultCut" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">Enable Right-Click Context Menu by Default</span>
+                <span class="setting-desc">Prevents websites from intercepting and suppressing right-clicks</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="defaultRightClick" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button id="btnSaveDefaults" class="btn btn-primary">Save Global Defaults</button>
+        </div>
+      </section>
+
+      <!-- Tab 2: Website Rules & Exceptions -->
+      <section id="tab-sites" class="tab-pane">
+        <div class="pane-header">
+          <h2 class="pane-title">Website Rules & Exceptions</h2>
+          <p class="pane-subtitle">Manage domain-specific overrides and excluded websites.</p>
+        </div>
+
+        <!-- Add Custom Rule Card -->
+        <div class="card">
+          <h3 class="card-section-title">Add Website Rule</h3>
+          <div class="add-rule-form">
+            <input type="text" id="newSiteHost" class="input-text" placeholder="e.g. example.com or restricted-doc.com">
+            <select id="newSiteStatus" class="select-dropdown">
+              <option value="enabled">Freedom Mode: ENABLED</option>
+              <option value="disabled">Freedom Mode: DISABLED</option>
+              <option value="excluded">Exclude (Never Run)</option>
+            </select>
+            <button id="btnAddSite" class="btn btn-secondary">Add Rule</button>
+          </div>
+        </div>
+
+        <!-- Saved Sites Table -->
+        <div class="card">
+          <div class="card-header-row">
+            <h3 class="card-section-title">Configured Websites</h3>
+            <span id="siteRulesCount" class="badge-pill">0 rules configured</span>
+          </div>
+
+          <div id="siteRulesList" class="site-rules-container">
+            <div class="empty-state">
+              <p>No site-specific rules yet.</p>
+              <p class="sub">Websites you customize via the extension popup will appear here.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-bar danger-bar">
+          <button id="btnClearAllRules" class="btn btn-danger-outline">Clear All Custom Website Rules</button>
+        </div>
+      </section>
+
+      <!-- Tab 3: Website Scan History (New in v1.1) -->
+      <section id="tab-history" class="tab-pane">
+        <div class="pane-header">
+          <h2 class="pane-title">Website Scan History</h2>
+          <p class="pane-subtitle">Locally stored audit log of visited websites and their restriction status. Never stores clipboard contents.</p>
+        </div>
+
+        <div class="card">
+          <div class="history-toolbar">
+            <input type="text" id="searchHistory" class="input-text" placeholder="Filter scanned websites...">
+            <div class="history-actions">
+              <span id="historyCountBadge" class="badge-pill">0 sites scanned</span>
+              <button id="btnClearHistory" class="btn btn-secondary" title="Clear all local scan history">Clear History</button>
+            </div>
+          </div>
+
+          <div id="scanHistoryContainer" class="history-list-container">
+            <div class="empty-state">
+              <p>No website scan history recorded yet.</p>
+              <p class="sub">As you browse and scan pages with CopyPaste Freedom, hostnames and restriction results will appear here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 4: Supported Features & Capabilities -->
+      <section id="tab-docs" class="tab-pane">
+        <div class="pane-header">
+          <h2 class="pane-title">Supported Features & Technical Guide</h2>
+          <p class="pane-subtitle">How CopyPaste Freedom safely restores interactions on restricted pages.</p>
+        </div>
+
+        <div class="card-grid">
+          <div class="card feature-doc-card">
+            <div class="feature-doc-header">
+              <span class="feature-tag">TEXT SELECTION</span>
+              <h4>CSS & Event Overrides</h4>
+            </div>
+            <p>Removes <code>user-select: none</code>, <code>-webkit-user-select: none</code>, and unblocks <code>selectstart</code> listeners across all content elements while safeguarding UI buttons, tabs, and forms.</p>
+          </div>
+
+          <div class="card feature-doc-card">
+            <div class="feature-doc-header">
+              <span class="feature-tag">COPY RESTORATION</span>
+              <h4>Capture-Phase Copy Guard</h4>
+            </div>
+            <p>Intercepts the <code>copy</code> event at the capture phase before malicious page scripts can execute <code>e.preventDefault()</code>. Restores <kbd>Ctrl + C</kbd> hotkeys without altering clipboard contents.</p>
+          </div>
+
+          <div class="card feature-doc-card">
+            <div class="feature-doc-header">
+              <span class="feature-tag">PASTE RESTORATION</span>
+              <h4>Input & Textarea Unblocking</h4>
+            </div>
+            <p>Prevents websites from disabling paste on text fields, email inputs, and password confirmations. Respects user-triggered paste actions and browser security standards.</p>
+          </div>
+
+          <div class="card feature-doc-card">
+            <div class="feature-doc-header">
+              <span class="feature-tag">RIGHT-CLICK CONTEXT MENU</span>
+              <h4>Contextmenu Interception</h4>
+            </div>
+            <p>Neutralizes <code>document.oncontextmenu</code> and suppresses cancellation events, allowing the native browser right-click menu to open anywhere.</p>
+          </div>
+        </div>
+
+        <div class="card notice-card">
+          <h4>🔒 Safety & Ethical Scope</h4>
+          <p>CopyPaste Freedom operates entirely locally in your browser. It does <strong>NOT</strong> bypass DRM, paid paywalls, authentication tokens, or sensitive OS-level protections. It does not record, log, or transmit any clipboard contents.</p>
+        </div>
+      </section>
+
+      <!-- Tab 5: About & Reset -->
+      <section id="tab-about" class="tab-pane">
+        <div class="pane-header">
+          <h2 class="pane-title">About & Maintenance</h2>
+          <p class="pane-subtitle">System details, privacy policy, and factory reset.</p>
+        </div>
+
+        <div class="card">
+          <h3 class="card-section-title">CopyPaste Freedom v1.1.0</h3>
+          <p class="about-desc">A premium, developer-focused Chrome extension engineered to restore user agency over browser interactions. Built with Manifest V3 and zero external dependencies.</p>
+          <div class="info-badges">
+            <span class="info-badge">100% Client-Side</span>
+            <span class="info-badge">Zero Telemetry</span>
+            <span class="info-badge">No Tracking</span>
+            <span class="info-badge">Storage API Persistence</span>
+            <span class="info-badge">Smart Diagnostics v1.1</span>
+          </div>
+        </div>
+
+        <div class="card danger-card">
+          <h3 class="card-section-title text-danger">Factory Reset</h3>
+          <p class="card-section-desc">Erase all global defaults, website exceptions, custom rules, and scan history. This will reset the extension back to its initial installation state.</p>
+          <div class="action-bar-inline">
+            <button id="btnFactoryReset" class="btn btn-danger">Reset All Settings to Factory Default</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

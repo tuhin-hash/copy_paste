@@ -1,0 +1,124 @@
+/* CopyPaste Freedom — Scoped CSS Overrides */
+
+/* Active Text Selection Overrides */
+html.cpf-select-active,
+html.cpf-select-active body,
+html.cpf-select-active article,
+html.cpf-select-active section,
+html.cpf-select-active main,
+html.cpf-select-active p,
+html.cpf-select-active span,
+html.cpf-select-active blockquote,
+html.cpf-select-active pre,
+html.cpf-select-active code,
+html.cpf-select-active h1,
+html.cpf-select-active h2,
+html.cpf-select-active h3,
+html.cpf-select-active h4,
+html.cpf-select-active h5,
+html.cpf-select-active h6,
+html.cpf-select-active li,
+html.cpf-select-active ul,
+html.cpf-select-active ol,
+html.cpf-select-active dl,
+html.cpf-select-active dt,
+html.cpf-select-active dd,
+html.cpf-select-active table,
+html.cpf-select-active thead,
+html.cpf-select-active tbody,
+html.cpf-select-active tr,
+html.cpf-select-active th,
+html.cpf-select-active td,
+html.cpf-select-active b,
+html.cpf-select-active strong,
+html.cpf-select-active i,
+html.cpf-select-active em,
+html.cpf-select-active mark,
+html.cpf-select-active small,
+html.cpf-select-active sub,
+html.cpf-select-active sup,
+html.cpf-select-active time,
+html.cpf-select-active font,
+html.cpf-select-active flutter-view,
+html.cpf-select-active flt-glass-pane,
+html.cpf-select-active flt-scene-host,
+html.cpf-select-active flt-scene,
+html.cpf-select-active flt-paragraph,
+html.cpf-select-active flt-text,
+html.cpf-select-active flt-semantics,
+html.cpf-select-active flt-semantics-host,
+html.cpf-select-active flt-semantics-container,
+html.cpf-select-active flt-clip,
+html.cpf-select-active flt-picture,
+html.cpf-select-active div:not([role="button"]):not([role="tab"]):not([role="menuitem"]):not(.btn):not(.button) {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Allow pointer interactions to reach DOM-based Flutter text elements */
+html.cpf-select-active flt-paragraph,
+html.cpf-select-active flt-text,
+html.cpf-select-active flt-semantics,
+html.cpf-select-active flt-semantics-host,
+html.cpf-select-active flt-semantics-container {
+  pointer-events: auto !important;
+}
+
+/* Ensure editable inputs remain selectable and editable */
+html.cpf-select-active input,
+html.cpf-select-active textarea,
+html.cpf-select-active [contenteditable="true"],
+html.cpf-select-active [contenteditable=""] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+}
+
+/* Unblock cursor and selection on explicitly restricted elements */
+html.cpf-select-active .user-select-none-test,
+html.cpf-select-active .user-select-none,
+html.cpf-select-active .test-box,
+html.cpf-select-active [unselectable],
+html.cpf-select-active [data-cpf-orig-user-select] {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  cursor: auto !important;
+}
+
+/* Ensure high-contrast, visually unmistakable neon-green text selection */
+html.cpf-select-active ::selection {
+  background-color: #B7FF00 !important;
+  color: #080A0A !important;
+  text-shadow: none !important;
+}
+
+html.cpf-select-active ::-moz-selection {
+  background-color: #B7FF00 !important;
+  color: #080A0A !important;
+  text-shadow: none !important;
+}
+
+html.cpf-select-active input::selection,
+html.cpf-select-active textarea::selection {
+  background-color: #B7FF00 !important;
+  color: #080A0A !important;
+  text-shadow: none !important;
+}
+
+html.cpf-select-active input::-moz-selection,
+html.cpf-select-active textarea::-moz-selection {
+  background-color: #B7FF00 !important;
+  color: #080A0A !important;
+  text-shadow: none !important;
+}
+
+/* Clear pointer-events blockers on text wrappers */
+html.cpf-select-active .cpf-unblock-pointer {
+  pointer-events: auto !important;
+}
