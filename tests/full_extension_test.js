@@ -160,16 +160,35 @@ console.log('\n  Sub-test 4.1: Copy Restoration (Ctrl+C & Copy Event)');
 console.log('\n  Sub-test 4.2: Paste Restoration (Ctrl+V & Editable Fields)');
 {
   let activeSettings = { freedomMode: true, paste: true };
+  function isEditableTarget(target) {
+    if (!target) return false;
+    if (target.isContentEditable) return true;
+    const tag = (target.tagName || '').toUpperCase();
+    if (tag === 'TEXTAREA') return !target.readOnly && !target.disabled;
+    if (tag === 'INPUT') {
+      const type = (target.type || 'text').toLowerCase();
+      const nonTextTypes = ['button', 'submit', 'reset', 'checkbox', 'radio', 'image', 'file', 'hidden', 'range', 'color'];
+      if (nonTextTypes.includes(type)) return false;
+      return !target.readOnly && !target.disabled;
+    }
+    if (target.getAttribute && (target.getAttribute('contenteditable') === 'true' || target.getAttribute('contenteditable') === '')) return true;
+    if (target.closest && target.closest('[contenteditable="true"], [contenteditable=""], [contenteditable="plaintext-only"]')) return true;
+    return false;
+  }
+
+  function isFlutterEditingHost(target) {
+    if (!target) return false;
+    if (target.classList && target.classList.contains && target.classList.contains('flt-text-editing')) return true;
+    if (target.closest && target.closest('flt-text-editing-host')) return true;
+    return false;
+  }
+
   function handlePaste(e) {
     if (e._cpf_probe) return;
     if (activeSettings.freedomMode && activeSettings.paste) {
       const target = e.target;
-      const isEditable = !target || (
-        target.isContentEditable ||
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.getAttribute && target.getAttribute('contenteditable') === 'true'
-      );
+      if (isFlutterEditingHost(target)) return;
+      const isEditable = isEditableTarget(target);
       if (isEditable) {
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -779,6 +798,136 @@ console.log('\nTEST SUITE 13: WorkScribe & Shadow DOM Traversal Verification');
 
   const shadowWithDom = simulateShadowDomDetection(false, true);
   assert(shadowWithDom.isDomFlutter === true, 'Shadow DOM text nodes correctly classified as DomFlutter');
+}
+
+// 14. PASTE INTERACTION DIAGNOSTIC & REGRESSION VERIFICATION
+console.log('\nTEST SUITE 14: Paste Interaction Diagnostic & Regression Verification');
+{
+  function isEditableTarget(target) {
+    if (!target) return false;
+    if (target.isContentEditable) return true;
+    const tag = (target.tagName || '').toUpperCase();
+    if (tag === 'TEXTAREA') return !target.readOnly && !target.disabled;
+    if (tag === 'INPUT') {
+      const type = (target.type || 'text').toLowerCase();
+      const nonTextTypes = ['button', 'submit', 'reset', 'checkbox', 'radio', 'image', 'file', 'hidden', 'range', 'color'];
+      if (nonTextTypes.includes(type)) return false;
+      return !target.readOnly && !target.disabled;
+    }
+    if (target.getAttribute && (target.getAttribute('contenteditable') === 'true' || target.getAttribute('contenteditable') === '')) return true;
+    if (target.closest && target.closest('[contenteditable="true"], [contenteditable=""], [contenteditable="plaintext-only"]')) return true;
+    return false;
+  }
+
+  function isFlutterEditingHost(target) {
+    if (!target) return false;
+    if (target.classList && target.classList.contains && target.classList.contains('flt-text-editing')) return true;
+    if (target.closest && target.closest('flt-text-editing-host')) return true;
+    return false;
+  }
+
+  function simulatePasteHandling(target, settings, isProbe = false) {
+    const pasteEvent = new MockEvent('paste', { target, cancelable: true });
+    pasteEvent._cpf_probe = isProbe;
+
+    if (!isProbe && settings.freedomMode && settings.paste) {
+      if (!isFlutterEditingHost(target) && isEditableTarget(target)) {
+        pasteEvent.stopPropagation();
+        pasteEvent.stopImmediatePropagation();
+      }
+    }
+    return pasteEvent;
+  }
+
+  function simulateKeyDownHandling(target, key, ctrlKey, settings) {
+    const keyEvent = new MockEvent('keydown', { target, cancelable: true });
+    keyEvent.key = key;
+    keyEvent.ctrlKey = ctrlKey;
+
+    if (settings.freedomMode && (ctrlKey || keyEvent.metaKey)) {
+      const k = (key || '').toLowerCase();
+      if (k === 'v' && settings.paste) {
+        if (!isFlutterEditingHost(target) && isEditableTarget(target)) {
+          keyEvent.stopPropagation();
+        }
+      }
+    }
+    return keyEvent;
+  }
+
+  const activeSettings = { freedomMode: true, paste: true };
+
+  // 14.1: Paste into standard textarea
+  const mockTextarea = { tagName: 'TEXTAREA', isContentEditable: false, readOnly: false, disabled: false };
+  const textareaPaste = simulatePasteHandling(mockTextarea, activeSettings);
+  assert(textareaPaste.propagationStopped, 'Paste into textarea: event propagation stopped to neutralize site blocker');
+  assert(!textareaPaste.defaultPrevented, 'Paste into textarea: native default paste action is NOT prevented');
+
+  // 14.2: Paste into standard input
+  const mockInput = { tagName: 'INPUT', type: 'text', isContentEditable: false, readOnly: false, disabled: false };
+  const inputPaste = simulatePasteHandling(mockInput, activeSettings);
+  assert(inputPaste.propagationStopped, 'Paste into input: event propagation stopped to neutralize site blocker');
+  assert(!inputPaste.defaultPrevented, 'Paste into input: native default paste action is NOT prevented');
+
+  // 14.3: Paste into contenteditable editor
+  const mockContentEditable = {
+    tagName: 'DIV',
+    isContentEditable: true,
+    getAttribute: (attr) => attr === 'contenteditable' ? 'true' : null,
+    closest: (selector) => selector.includes('contenteditable') ? mockContentEditable : null
+  };
+  const contentEditablePaste = simulatePasteHandling(mockContentEditable, activeSettings);
+  assert(contentEditablePaste.propagationStopped, 'Paste into contenteditable: event propagation stopped to neutralize site blocker');
+  assert(!contentEditablePaste.defaultPrevented, 'Paste into contenteditable: native default paste action is NOT prevented');
+
+  // 14.4: Ctrl+V keydown on editable field
+  const inputKeyDown = simulateKeyDownHandling(mockInput, 'v', true, activeSettings);
+  assert(inputKeyDown.propagationStopped, 'Ctrl+V keydown on input: propagation stopped to prevent site from calling preventDefault');
+
+  // 14.5: Disabled paste toggle (Freedom Mode ON, Paste toggle OFF)
+  const pasteDisabledSettings = { freedomMode: true, paste: false };
+  const disabledPasteEvent = simulatePasteHandling(mockInput, pasteDisabledSettings);
+  assert(!disabledPasteEvent.propagationStopped, 'Disabled paste toggle: paste event is NOT intercepted');
+  const disabledKeyDownEvent = simulateKeyDownHandling(mockInput, 'v', true, pasteDisabledSettings);
+  assert(!disabledKeyDownEvent.propagationStopped, 'Disabled paste toggle: Ctrl+V keydown is NOT intercepted');
+
+  // 14.6: Freedom Mode OFF
+  const freedomOffSettings = { freedomMode: false, paste: true };
+  const offPasteEvent = simulatePasteHandling(mockInput, freedomOffSettings);
+  assert(!offPasteEvent.propagationStopped, 'Freedom Mode OFF: paste event passes through untouched to website');
+  const offKeyDownEvent = simulateKeyDownHandling(mockInput, 'v', true, freedomOffSettings);
+  assert(!offKeyDownEvent.propagationStopped, 'Freedom Mode OFF: Ctrl+V keydown passes through untouched to website');
+
+  // 14.7: Normal website paste behavior (non-restricted input)
+  const normalInputPaste = simulatePasteHandling(mockInput, activeSettings);
+  assert(!normalInputPaste.defaultPrevented, 'Normal website paste: default browser paste action is preserved');
+
+  // 14.8: Flutter Web text editing host (WorkScribe text inputs)
+  const mockFlutterTextEditing = {
+    tagName: 'TEXTAREA',
+    classList: { contains: (cls) => cls === 'flt-text-editing' },
+    closest: (sel) => sel.includes('flt-text-editing-host') ? { tagName: 'FLT-TEXT-EDITING-HOST' } : null,
+    isContentEditable: false,
+    readOnly: false,
+    disabled: false
+  };
+  const flutterPaste = simulatePasteHandling(mockFlutterTextEditing, activeSettings);
+  assert(!flutterPaste.propagationStopped, 'Flutter Web editing host: paste event NOT intercepted, allowing Flutter engine to read clipboardData');
+  const flutterKeyDown = simulateKeyDownHandling(mockFlutterTextEditing, 'v', true, activeSettings);
+  assert(!flutterKeyDown.propagationStopped, 'Flutter Web editing host: Ctrl+V keydown NOT intercepted, reaching Flutter keyboard service');
+
+  // 14.9: Unsupported / non-editable Canvas target (e.g. WorkScribe document viewer)
+  const mockCanvas = {
+    tagName: 'CANVAS',
+    isContentEditable: false,
+    getAttribute: () => null,
+    closest: (sel) => sel.includes('flutter-view') ? { tagName: 'FLUTTER-VIEW' } : null
+  };
+  assert(!isEditableTarget(mockCanvas), 'Canvas target: correctly evaluated as non-editable surface');
+  const canvasPaste = simulatePasteHandling(mockCanvas, activeSettings);
+  assert(!canvasPaste.propagationStopped, 'Canvas target: non-editable canvas paste is NOT intercepted or synthetically fabricated');
+  const canvasKeyDown = simulateKeyDownHandling(mockCanvas, 'v', true, activeSettings);
+  assert(!canvasKeyDown.propagationStopped, 'Canvas target: keydown on non-editable canvas is NOT intercepted');
 }
 
 console.log('\n====================================================');

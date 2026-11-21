@@ -231,15 +231,35 @@
     }
   }
 
+  function isEditableTarget(target) {
+    if (!target) return false;
+    if (target.isContentEditable) return true;
+    const tag = (target.tagName || '').toUpperCase();
+    if (tag === 'TEXTAREA') return !target.readOnly && !target.disabled;
+    if (tag === 'INPUT') {
+      const type = (target.type || 'text').toLowerCase();
+      const nonTextTypes = ['button', 'submit', 'reset', 'checkbox', 'radio', 'image', 'file', 'hidden', 'range', 'color'];
+      if (nonTextTypes.includes(type)) return false;
+      return !target.readOnly && !target.disabled;
+    }
+    if (target.getAttribute && (target.getAttribute('contenteditable') === 'true' || target.getAttribute('contenteditable') === '')) return true;
+    if (target.closest && target.closest('[contenteditable="true"], [contenteditable=""], [contenteditable="plaintext-only"]')) return true;
+    return false;
+  }
+
+  function isFlutterEditingHost(target) {
+    if (!target) return false;
+    if (target.classList && target.classList.contains('flt-text-editing')) return true;
+    if (target.closest && target.closest('flt-text-editing-host')) return true;
+    return false;
+  }
+
   function handleCutCapture(e) {
     if (e._cpf_probe) return;
     if (activeSettings.freedomMode && activeSettings.cut) {
       const target = e.target;
-      const isEditable = target && (
-        target.isContentEditable ||
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA'
-      );
+      if (isFlutterEditingHost(target)) return;
+      const isEditable = isEditableTarget(target);
       if (isEditable) {
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -251,12 +271,10 @@
     if (e._cpf_probe) return;
     if (activeSettings.freedomMode && activeSettings.paste) {
       const target = e.target;
-      const isEditable = !target || (
-        target.isContentEditable ||
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.getAttribute('contenteditable') === 'true'
-      );
+      // For Flutter Web text editing host, allow the paste event to reach the host textarea
+      // so Flutter's engine can read e.clipboardData and update its CanvasKit text state
+      if (isFlutterEditingHost(target)) return;
+      const isEditable = isEditableTarget(target);
       if (isEditable) {
         e.stopPropagation();
         e.stopImmediatePropagation();
@@ -289,15 +307,13 @@
     if (key === 'c' && activeSettings.copy) {
       e.stopPropagation();
     } else if (key === 'v' && activeSettings.paste) {
-      e.stopPropagation();
+      const target = e.target;
+      if (!isFlutterEditingHost(target) && isEditableTarget(target)) {
+        e.stopPropagation();
+      }
     } else if (key === 'x' && activeSettings.cut) {
       const target = e.target;
-      const isEditable = target && (
-        target.isContentEditable ||
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA'
-      );
-      if (isEditable) {
+      if (!isFlutterEditingHost(target) && isEditableTarget(target)) {
         e.stopPropagation();
       }
     } else if (key === 'a' && activeSettings.textSelection) {

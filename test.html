@@ -336,6 +336,7 @@
         </div>
         <input type="text" id="pasteBlockedInput" class="input-field" placeholder="Try pasting here (Ctrl + V or Right-Click Paste)">
         <textarea id="pasteBlockedTextarea" class="input-field" placeholder="Try pasting into this textarea..."></textarea>
+        <div id="pasteBlockedContentEditable" class="input-field" contenteditable="true" style="min-height: 48px; padding: 10px; margin-top: 10px; border-radius: 8px;">Try pasting into this contenteditable editor...</div>
         <p class="subtitle">Without Freedom Mode: Paste attempts are rejected.<br>With Freedom Mode: Text pastes normally into the field.</p>
       </div>
 
@@ -518,21 +519,22 @@
     // 3. Paste Restriction Handlers
     const pasteInput = document.getElementById('pasteBlockedInput');
     const pasteTextarea = document.getElementById('pasteBlockedTextarea');
+    const pasteContentEditable = document.getElementById('pasteBlockedContentEditable');
 
-    [pasteInput, pasteTextarea].forEach(el => {
+    [pasteInput, pasteTextarea, pasteContentEditable].filter(Boolean).forEach(el => {
       el.addEventListener('paste', (e) => {
         if (e._cpf_probe) {
           e.preventDefault();
           return;
         }
         e.preventDefault();
-        logEvent('paste', 'Website prevented paste into input field', true);
+        logEvent('paste', `Website prevented paste into ${el.tagName.toLowerCase()} field`, true);
         showBlockedToast('🚫 Website policy: Pasting is prohibited!');
       });
 
       el.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
-          logEvent('keydown', 'Website detected Ctrl+V in input and called preventDefault', true);
+          logEvent('keydown', `Website detected Ctrl+V in ${el.tagName.toLowerCase()} field and called preventDefault`, true);
           e.preventDefault();
         }
       });
